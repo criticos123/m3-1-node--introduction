@@ -34,22 +34,34 @@ express()
       "🙈",
       "🙉",
     ];
-    const message = { author: "monkey", text: messages };
+
+    const message = {
+      author: "monkey",
+      text: messages[Math.floor(Math.random() * messages.length)],
+    }; // TODO: make it send a random message
     const randomTime = Math.floor(Math.random() * 3000);
     setTimeout(() => {
       res.status(200).json({ status: 200, message });
     }, randomTime);
   })
   .get("/parrot-message", (req, res) => {
-    const message = { author: "parrot", text: " Polly want a cracker?" };
+    const message = { author: "parrot", text: req.query.message };
     const randomTime = Math.floor(Math.random() * 3000);
     setTimeout(() => {
       res.status(200).json({ status: 200, message });
     }, randomTime);
-    console.log(req.query);
   })
   .get("/bot-message", (req, res) => {
-    const message = { author: "bot", text: " Buzz?" };
+    let text = req.query.message.toLowerCase();
+    const commonGreetings = ["hi", "hello", "howdy"];
+    commonGreetings.forEach((greeting) => {
+      if (text.includes(greeting)) text = "hello. ";
+    });
+    const commonGoodbyes = ["bye", "goodbye", "sayonara"];
+    commonGoodbyes.forEach((goodbye) => {
+      if (text.includes(goodbye)) text = "goodbye. ";
+    });
+    const message = { author: "bot", text: "Bzzt " + text };
     const randomTime = Math.floor(Math.random() * 3000);
     setTimeout(() => {
       res.status(200).json({ status: 200, message });
